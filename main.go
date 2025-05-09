@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Generator генерирует последовательные числа начиная с 1 и отправляет их в канал ch
 func Generator(ctx context.Context, ch chan<- int64, fn func(int64)) {
 	var n int64 = 1
 
@@ -25,6 +26,7 @@ func Generator(ctx context.Context, ch chan<- int64, fn func(int64)) {
 	}
 }
 
+// Worker читает числа из входного канала и передает их в выходной канал
 func Worker(in <-chan int64, out chan<- int64) {
 	for {
 		select {
@@ -40,8 +42,9 @@ func Worker(in <-chan int64, out chan<- int64) {
 }
 
 func main() {
-	chIn := make(chan int64)
+	chIn := make(chan int64) // Канал для генерации чисел
 
+	// Создаем контекст с таймаутом 1 секунда
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
